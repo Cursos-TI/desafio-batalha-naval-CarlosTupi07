@@ -1,99 +1,105 @@
 #include <stdio.h>
 
-#define linhas 10
-#define colunas 10
+#define TAM_TABULEIRO 10
+#define TAM_HABILIDADE 5
 
+void imprimirtabuleiro() {
+    char coluna[TAM_TABULEIRO] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+    int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO];
 
-void idcoluna(){
-
-        // Função para imprimir as letras das colunas (A a J)
-     char coluna[colunas] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}; 
-
-        printf("   ");
-        for (int i = 0; i < 10; i++)
-        {   
-           
-            printf("%2c", coluna[i]);
+    // Inicializa o tabuleiro 
+    for (int i = 0; i < TAM_TABULEIRO; i++) {
+        for (int j = 0; j < TAM_TABULEIRO; j++) {
+            tabuleiro[i][j] = 0;
         }
-            printf("\n");
-
     }
 
+    // navio
+    tabuleiro[9][9] = 3;
+    tabuleiro[8][8] = 3;
+    tabuleiro[7][7] = 3;
 
+    // cruz (1)
+    for (int i = 0; i < TAM_HABILIDADE; i++) {
+        for (int j = 0; j < TAM_HABILIDADE; j++) {
+            if (i == TAM_HABILIDADE / 2 || j == TAM_HABILIDADE / 2)
+                tabuleiro[i][j] = 1;
+        }
+    }
 
+    //  cone (2)
+    int centro_coluna = 7;
+    int altura_cone = 3;
 
-    void idtabuleiro(){ //recursividade para organizar o codigo
+    for (int i = 0; i < altura_cone; i++) {
+        int inicio = centro_coluna - i;
+        int fim = centro_coluna + i;
 
-         const int tamanhotabuleiro = 10;
-         int tabuleiro[linhas][colunas];
-         int soma;
-        
-            for (int i = 0; i < tamanhotabuleiro; i++){
-                 // Imprime o tabuleiro com os números das linhas
-                 printf("%2d|", i + 1);
-
-                for ( int j = 0; j < tamanhotabuleiro; j++){ 
-                tabuleiro[i][j] = 0;
-                 soma = i + j ;
-
-
-                 // Posiciona os "navios" no tabuleiro com o valor 1
-                tabuleiro[5][1] = 3; tabuleiro[5][2] = 3; tabuleiro[5][3] = 3;
-                tabuleiro[9][7] = 3; tabuleiro[9][8] = 3; tabuleiro[9][9] = 3;
-                
-
-
-                // função para imprimir o navio na diagonal (tamanho 3)
-                    for (int i = 0; i <= 2; i++)
-                        {
-                        
-                            if (soma == 9)
-                            {
-                                tabuleiro[i][j] = 3;
-
-                            }else if(soma == 3)
-                            {
-                                tabuleiro[i][j] = 3;
-                            }
-                            else{
-                                tabuleiro[i][j] = 0;
-                            }
-                        }
-
-
-
-                
-
-                 // Imprime os valores 0 ou 1
-                 printf("%2d", tabuleiro[i][j]);
-                }
-
-                
-                
-                printf("\n");
+        for (int j = inicio; j <= fim; j++) {
+            if (j >= 0 && j < TAM_TABULEIRO) {
+                tabuleiro[i][j] = 2;
             }
-
+        }
     }
 
-   
-int main(){
+    //octaedro (valor 4) 
+    int centro_x = 5;
+    int centro_y = 5;
+    int tamanho = 2;
 
-        printf("--------------------------------------------\n");
-        printf("\n");
-        printf("BEM VINDO AO BATALHA NAVAL\n");
-        printf("\n");
-
-
-
-         idcoluna();
-         idtabuleiro();
-     
     
-        
-        
-        printf("--------------------------------------------");
+    for (int i = 0; i <= tamanho; i++) {
+        int inicio = centro_y - i;
+        int fim = centro_y + i;
 
+        for (int j = inicio; j <= fim; j++) {
+            int x = centro_x - i;
+            int y = j;
 
+            if (x >= 0 && x < TAM_TABULEIRO && y >= 0 && y < TAM_TABULEIRO) {
+                tabuleiro[x][y] = 4;
+            }
+        }
+    }
+
+    
+    for (int i = 1; i <= tamanho; i++) {
+        int inicio = centro_y - (tamanho - i);
+        int fim = centro_y + (tamanho - i);
+
+        for (int j = inicio; j <= fim; j++) {
+            int x = centro_x + i;
+            int y = j;
+
+            if (x >= 0 && x < TAM_TABULEIRO && y >= 0 && y < TAM_TABULEIRO) {
+                tabuleiro[x][y] = 4;
+            }
+        }
+    }
+
+    // Impressão do tabuleiro
+    printf("   ");
+    for (int i = 0; i < TAM_TABULEIRO; i++) {
+        printf("%2c|", coluna[i]);
+    }
+    printf("\n");
+
+    for (int i = 0; i < TAM_TABULEIRO; i++) {
+        printf("%2d|", i + 1);
+        for (int j = 0; j < TAM_TABULEIRO; j++) {
+            printf("%2d|", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    printf("--------------------------------------------\n");
+    printf("BEM VINDO AO BATALHA NAVAL\n\n");
+
+    imprimirtabuleiro();
+
+    printf("--------------------------------------------\n");
 
     return 0;
-}   
+}
